@@ -1,0 +1,117 @@
+# Positions of the measurements of the transmission curve of gSDSS.
+#
+# Date: 22-06-2017
+# Authors of this file:
+# 
+# Description:
+#   This file contains the relative positions of the measurements
+#  of the transmission curves of the gSDSS provided in the file
+#  gSDSS_2D_JAST_OAJ.txt. The positions are given with respect to a grid
+#  of 100x100 points of arbitrary size (ie. this are not units
+#  of mm or pixels). 
+#
+# Columns description:
+#   col 1: Running number.
+#   col 2: X position (arbitrary units)
+#   col 3: Y position (arbitrary units)
+#
+1 6 7
+2 6 17
+3 6 28
+4 6 38
+5 6 48
+6 6 59
+7 6 69
+8 6 79
+9 6 90
+10 6 100
+11 17 7
+12 17 17
+13 17 28
+14 17 38
+15 17 48
+16 17 59
+17 17 69
+18 17 79
+19 17 90
+20 17 100
+21 27 7
+22 27 17
+23 27 28
+24 27 38
+25 27 48
+26 27 59
+27 27 69
+28 27 79
+29 27 90
+30 27 100
+31 38 7
+32 38 17
+33 38 28
+34 38 38
+35 38 48
+36 38 59
+37 38 69
+38 38 79
+39 38 90
+40 38 100
+41 49 7
+42 49 17
+43 49 28
+44 49 38
+45 49 48
+46 49 59
+47 49 69
+48 49 79
+49 49 90
+50 49 100
+51 59 7
+52 59 17
+53 59 28
+54 59 38
+55 59 48
+56 59 59
+57 59 69
+58 59 79
+59 59 90
+60 59 100
+61 70 7
+62 70 17
+63 70 28
+64 70 38
+65 70 48
+66 70 59
+67 70 69
+68 70 79
+69 70 90
+70 70 100
+71 81 7
+72 81 17
+73 81 28
+74 81 38
+75 81 48
+76 81 59
+77 81 69
+78 81 79
+79 81 90
+80 81 100
+81 91 7
+82 91 17
+83 91 28
+84 91 38
+85 91 48
+86 91 59
+87 91 69
+88 91 79
+89 91 90
+90 91 100
+91 102 7
+92 102 17
+93 102 28
+94 102 38
+95 102 48
+96 102 59
+97 102 69
+98 102 79
+99 102 90
+100 102 100

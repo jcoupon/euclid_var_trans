@@ -1,0 +1,62 @@
+((= Nbconvert custom style for LaTeX export =))
+
+((*- extends 'nbextensions.tplx' -*))
+
+%===============================================================================
+% Custom definitions
+%===============================================================================
+((* block definitions *))
+    ((( super() )))
+
+    % Pygments definitions
+    ((( resources.latex.pygments_definitions )))
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+    % Don't number sections
+    % \renewcommand{\thesection}{\hspace*{-0.5em}}
+    % \renewcommand{\thesubsection}{\hspace*{-0.5em}}
+
+((* endblock definitions *))
+
+
+% Author and Title from metadata
+((* block maketitle *))
+
+\begin{center}
+\noindent
+{\LARGE{{The effect of variable transmissions\\ on photometric redshifts}}}\\
+Jean Coupon\footnote{Contact: \url{jean.coupon@unige.ch}} (University of Geneva) et al.\\
+\today
+\end{center}
+%\vspace{10mm}
+((* endblock maketitle *))
+
+
+
+
+%===============================================================================
+% Latex Article
+%===============================================================================
+% You can customize your LaTeX document here, e.g. you can
+% - use a different documentclass like
+%   \documentclass{report}
+% - add/remove packages (like ngerman)
+
+((* block docclass *))
+% !TeX spellcheck = de_DE
+% !TeX encoding = UTF-8
+\documentclass{article}
+% \usepackage{ngerman}
+((* endblock docclass *))
+
+
+% Disable input cells
+((* block input_group *))
+((* endblock input_group *))
+
+% Disable output text
+((* block stream *))
+((* endblock stream *))
