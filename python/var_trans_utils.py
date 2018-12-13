@@ -5,6 +5,8 @@ import re
 import pandas as pd
 import numpy as np
 
+import collections
+
 # these are the functions to characterize and 
 # plot the filters
 
@@ -164,10 +166,162 @@ def plot_stats(
     ax.set_ylabel(r'$\Delta\lambda$ [\AA{}]')
     
     if plot_legend:
-        ax.legend(loc='upper left', prop={'size': legend_size})   
+        ax.legend(loc='upper left', prop={'size': legend_size}, frameon=True)   
+        
 
     ax.plot(ax.get_xlim(), [0.0, 0.0], color='black', linestyle=':')
 
     # ax.legend(bbox_to_anchor=(1.1, 1.1))
     
     return ax
+
+
+
+
+    # these are the functions to create and 
+# change the transmission shape
+
+def create_r_top_hat_trans(name, top=0.5):
+    """ Create a top-hat transmission 
+    simlar to a r-band """
+    N = 10000
+    
+    result = {}
+    if name is 'r' :
+        result['lambda'] = np.linspace(5000.0, 8000.0, N)
+        result['trans'] = np.zeros(N)
+        result['trans'][(5600.0 < result['lambda']) \
+                        & (result['lambda'] < 7000.0)] = top
+    return result
+
+def shift_trans(lbd, trans, shift):
+    """ Shift the filter
+    transmission in wavelength.
+    A positive shift goes towards
+    higher wavelengths (red) 
+    
+    INPUT
+    - lbd: wavelength
+    - trans: transmission values
+    - shift: in wavelength
+
+    OUTPUT
+    - modified filter
+    """
+    
+    return np.interp(lbd-shift, lbd, trans)
+
+def stretch_trans(lbd, trans, stretch):
+    """ Modify the transmission by 
+    stretching the transmission 
+    around the mean.
+    
+    The strecth value is the fractional 
+    increase of the transmission,
+    between -1 and 1.
+    
+    INPUT
+    - lbd: wavelength
+    - trans: transmission values
+    - stretch (between -1 and 1)
+
+    OUTPUT
+    - modified filter
+    """
+    
+    result = np.zeros(len(trans))
+    
+    # record where the transmission is non zero
+    pos = np.argwhere(trans > 0.1).flatten()
+    
+    # mean lambda
+    mean = mean_trans(lbd, trans)
+    
+    lbd_stretched = (lbd-mean)*(1.0+stretch)+mean
+    
+    result = np.interp(lbd, lbd_stretched, trans)
+    
+    return result
+
+def tilt_trans(lbd, trans, tilt):
+    """ Modify the transmission by 
+    tilting the top around the mean.
+    
+    The tilt value is the fractional 
+    increase of the transmission at
+    the red edge, between -0.5 and 0.5.
+    
+    A positive tilt will skew 
+    the filter to the red.
+    
+    INPUT
+    - lbd: wavelength
+    - trans: transmission values
+    - tilt (between -0.5 and 0.5)
+
+    OUTPUT
+    - modified filter
+    """
+    
+    result = np.zeros(len(trans))
+    
+    # record where the transmission is non zero
+    pos = np.argwhere(trans > 0.1).flatten()
+    
+    # mean lambda
+    mean = mean_trans(lbd, trans)
+    
+    # sigma lambda
+    sigma = std_trans(lbd, trans)
+
+    # fractional increase
+    frac_increase = 1.0+tilt/sigma \
+        * (lbd[pos]-mean)
+
+    # compute transmission
+    result[pos] = trans[pos]*frac_increase
+
+    return result
+
+def softening_trans(lbd, trans, softening):
+    """ Modify the transmission by 
+    softening the edges through 
+    a convolution with a trapezoid
+    
+    The softening value is the width of the 
+    trapezoid relative to the sigma of 
+    the distribution
+    
+    INPUT
+    - lbd: wavelength
+    - trans: transmission values
+    - softening (between 0 and 1)
+
+    OUTPUT
+    - modified filter
+    """
+    
+    # result = np.zeros(len(trans))
+
+    if softening == 0.0:
+        return trans
+    
+    # mean lambda
+    mean = mean_trans(lbd, trans)
+
+    # sigma lambda
+    sigma = std_trans(lbd, trans)
+    
+    # kernel = trapezoid
+    # x = np.array([-1.0, -0.1, +0.1,  +1.0])*sigma*softening
+    # y = np.array([0.0, 1.0, 1.0, 0.0])
+    x = np.array([-1.0, 0.0,  +1.0])*sigma*softening
+    y = np.array([0.0, 1.0, 0.0])
+
+
+    kernel_x = np.arange(x[0], x[-1], lbd[1]-lbd[0])
+    kernel_y = np.interp(kernel_x, x, y)
+    
+    result = np.convolve(trans, kernel_y, 'same')
+    
+    return result/np.max(result)*np.max(trans)
